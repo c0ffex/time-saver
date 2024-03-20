@@ -14,5 +14,56 @@ datasource db {
 }
 
 model User {
-  
+ id        Int      @id @default(autoincrement())
+ name      String
+ email     String   @unique
+ password String
+ emailConfirmed Boolean @default(false)
 }
+
+model Schedule {
+ id          Int      @id @default(autoincrement())
+ userId      Int
+ time        String
+ date        DateTime
+ usedTime    Int
+ confirmed   Boolean @default(false)
+ costumer Costumer?
+}
+
+model Costumer {
+  id Int @id @default(autoincrement())
+  email String
+  name String
+  phone String
+  schedule Schedule @relation(fields: [scheduleId], references: [id] )
+  scheduleId Int @unique
+}
+
+model Service {
+ id          Int            @id @default(autoincrement())
+ userId      Int
+ name        String
+ description String
+ duration    Int
+ price       Float?
+ availabilities Availability[]
+}
+
+model UserAvailability {
+ id      Int    @id @default(autoincrement())
+ userId Int
+ availabilities Availability[]
+}
+
+model Availability {
+ id                 Int                 @id @default(autoincrement())
+ date               DateTime
+ hour               String
+ minute             String
+ service            Service?             @relation(fields: [serviceId], references: [id])
+ serviceId          Int?
+ userAvailability   UserAvailability?   @relation(fields: [userAvailabilityId], references: [id])
+ userAvailabilityId Int?
+}
+

@@ -20,9 +20,10 @@ model User {
  password String
  profilePicture String?
  emailConfirmed Boolean @default(false)
+ emailToken String?
 }
 
-model Schedule {
+model Appointment {
  id          Int      @id @default(autoincrement())
  userId      Int
  time        String
@@ -37,7 +38,7 @@ model Costumer {
   email String
   name String
   phone String
-  schedule Schedule @relation(fields: [scheduleId], references: [id] )
+  appointment Appointment @relation(fields: [scheduleId], references: [id] )
   scheduleId Int @unique
 }
 

@@ -1,14 +1,28 @@
-import { Controller, Post, Body } from '@nestjs/common';
-import { UserService } from './user.service'; // Ajuste o caminho conforme necessário
+import { Controller, Post, Body, Get, Query } from '@nestjs/common';
+import { ApiOkResponse } from '@nestjs/swagger';
+import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-
+import { LoginUserDto } from './dto/login-user.dto';
+import { AuthEntity } from './entity/user.entity';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
-  @Post()
-  async create(@Body() CreateUserDto: CreateUserDto) {
-    return this.userService.createUser(CreateUserDto);
+  @Post('register')
+  async create(@Body() createUserDto: CreateUserDto) {
+    return this.userService.createUser(createUserDto);
+  }
+
+  @Post('login')
+  @ApiOkResponse({ type: AuthEntity })
+  async login(@Body() loginUserDto: LoginUserDto) {
+    return this.userService.login(loginUserDto);
+  }
+
+  @Get('confirm-email')
+  @ApiOkResponse({ description: 'confirmed email' })
+  async confirmEmail(@Query('token') emailToken: string) {
+    return this.userService.confirmEmail(emailToken);
   }
 }

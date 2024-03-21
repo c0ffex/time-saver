@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface IUser {
   id: number;
   name: string;
@@ -5,5 +6,5 @@ interface IUser {
   password: string;
   profilePicture?: string;
   emailConfirmed: boolean;
- }
- 
+  emailToken?: string;
+}

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Query } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -20,9 +20,9 @@ export class UserController {
     return this.userService.login(loginUserDto);
   }
 
-  @Get('confirm-email')
+  @Get('confirm-email/:token')
   @ApiOkResponse({ description: 'confirmed email' })
-  async confirmEmail(@Query('token') emailToken: string) {
+  async confirmEmail(@Param('token') emailToken: string) {
     return this.userService.confirmEmail(emailToken);
   }
 }

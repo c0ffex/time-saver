@@ -4,7 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { HashHelper } from './user-helpers/hash.helpers';
+import { AuthHelper } from './user-helpers/auth.helper';
 
 export const jwtSecret = 'zjP9h6ZI5LoSKCRj';
 
@@ -18,6 +18,6 @@ export const jwtSecret = 'zjP9h6ZI5LoSKCRj';
     }),
   ],
   controllers: [UserController],
-  providers: [UserService, HashHelper],
+  providers: [UserService, AuthHelper],
 })
 export class UserModule {}

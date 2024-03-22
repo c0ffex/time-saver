@@ -9,7 +9,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthEntity } from './entity/user.entity';
-import { HashHelper } from './user-helpers/hash.helpers';
+import { AuthHelper } from './user-helpers/auth.helper';
 import { randomUUID } from 'crypto';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class UserService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
-    private hashHelper: HashHelper,
+    private authHelper: AuthHelper,
   ) {}
 
   async login(data: LoginUserDto): Promise<AuthEntity> {
@@ -29,14 +29,12 @@ export class UserService {
       throw new NotFoundException(`No user found for email: ${data.email}`);
     }
 
-    const isPasswordValid = this.hashHelper.validate(
-      data.password,
-      user.password,
-    );
+    const isUserValid = await this.authHelper.isUserValid(user, data.password);
 
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid password');
+    if (!isUserValid) {
+      throw new UnauthorizedException('Invalid credentials');
     }
+
     return {
       user,
       accessToken: this.jwtService.sign({ userId: user.id }),
@@ -50,7 +48,7 @@ export class UserService {
     if (existingUser) {
       throw new ConflictException('Email already in use');
     }
-    const hashedPassword = await this.hashHelper.hashPassword(data.password);
+    const hashedPassword = await this.authHelper.hashPassword(data.password);
 
     data.password = hashedPassword;
     data.emailToken = randomUUID();

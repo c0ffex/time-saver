@@ -30,10 +30,10 @@ model Appointment {
  date        DateTime
  usedTime    Int
  confirmed   Boolean @default(false)
- costumer Costumer?
+ customer Customer?
 }
 
-model Costumer {
+model Customer {
   id Int @id @default(autoincrement())
   email String
   name String

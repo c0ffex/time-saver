@@ -1,33 +1,31 @@
-# Use Node.js 20.11.1 como a imagem base
+# Use Node.js 20.11.1 as the base image
 FROM node:20.11.1 AS builder
 
-# Crie o diretório da aplicação
+# Create the application directory
 WORKDIR /app
 
-# Copie package.json e package-lock.json para garantir que ambos sejam usados
+# Copy package.json and package-lock.json to ensure both are used
 COPY package*.json ./
 COPY prisma ./prisma/
-
-# Instale as dependências da aplicação
+# Install application dependencies
 RUN npm install
 
-# Copie o restante dos arquivos da aplicação para o diretório de trabalho
+# Copy the rest of the application files to the working directory
 COPY . .
 
-
-# Construa a aplicação
+# Build the application
 RUN npm run build
 
-# Use Node.js 20.11.1 para o runtime
+# Use Node.js 20.11.1 for runtime
 FROM node:20.11.1
 
-# Copie node_modules e arquivos de package do estágio de builder
+# Copy node_modules and package files from the builder stage
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/dist ./dist
 
-# Exponha a porta 3000
+# Expose port 3000
 EXPOSE 3000
 
-# Comando para iniciar a aplicação em modo de produção
+# Command to start the application in development mode
 CMD [ "npm", "run", "start:dev" ]

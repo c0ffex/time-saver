@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-user.dto';
 import { AuthEntity } from './entity/user.entity';
 import { HashHelper } from './user-helpers/hash.helpers';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class UserService {
@@ -46,14 +47,16 @@ export class UserService {
     const existingUser = await this.prisma.user.findUnique({
       where: { email: data.email },
     });
-
     if (existingUser) {
       throw new ConflictException('Email already in use');
     }
     const hashedPassword = await this.hashHelper.hashPassword(data.password);
 
     data.password = hashedPassword;
-    return this.prisma.user.create({ data });
+    data.emailToken = randomUUID();
+    return this.prisma.user.create({
+      data,
+    });
   }
 
   async findOneById(id: number): Promise<IUser> {

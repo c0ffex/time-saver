@@ -60,9 +60,9 @@ model UserAvailability {
 
 model Availability {
  id                 Int                 @id @default(autoincrement())
- date               DateTime
- hour               String
- minute             String
+ weekDay            Int
+ hour               Int[]
+ minute             Int[]
  service            Service?             @relation(fields: [serviceId], references: [id])
  serviceId          Int?
  userAvailability   UserAvailability?   @relation(fields: [userAvailabilityId], references: [id])

@@ -28,7 +28,6 @@ export class UserService {
     if (!user) {
       throw new NotFoundException(`No user found for email: ${data.email}`);
     }
-
     const isUserValid = await this.authHelper.isUserValid(user, data.password);
 
     if (!isUserValid) {

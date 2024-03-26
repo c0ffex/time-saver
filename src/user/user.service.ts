@@ -4,7 +4,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -52,6 +52,7 @@ export class UserService {
 
     data.password = hashedPassword;
     data.emailToken = randomUUID();
+    data.emailConfirmed = true;
     return this.prisma.user.create({
       data,
     });

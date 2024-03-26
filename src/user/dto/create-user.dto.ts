@@ -3,5 +3,6 @@ export class CreateUserDto {
   readonly email: string;
   password: string;
   readonly profilePicture?: string;
+  emailConfirmed?: boolean;
   emailToken: string;
 }
